@@ -106,7 +106,7 @@ const Carriers = () => {
                             <div className="row">
                                 <div className="col-lg-5 col-md-5 col-sm-5">
                                     <FontAwesomeIcon icon={faTruck} className={classes.ficon} />
-                                    <h3>Carriers ({carriers.length ? carriers.length : 0})</h3>
+                                    <h3>Carrierss ({carriers.length ? carriers.length : 0})</h3>
                                 </div>
                                 <div className="col-lg-7 col-md-7 col-sm-7" style={{ "textAlign": "right" }}>
                                     <Actions reload={reload} setShowModal={setShowModal} setDetail={setDetail} />
