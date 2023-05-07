@@ -45,5 +45,45 @@ export default makeStyles((theme) => ({
     },
     mr2: {
         marginRight: '2px'
+    },
+    hr: {
+        width: "80%",
+        marginTop: "5px",
+        marginBottom: "5px"
+    },
+    mdnave: {
+        fontWeight: 'lighter',
+        fontSize: '15px'
+    },
+    subMenuFont: {
+        fontFamily: '"Open Sans",sans-serif',
+        color: '#8d8888',
+        marginRight: '5%',
+        cursor: 'pointer',
+    },
+    subMenu: {
+        display: 'block',
+        textDecoration: 'none',
+        "&:hover": {
+            color: "#8d8888"
+        }
+    },
+    mdright: {
+        width: "25%",
+        background: "#e0e0e0",
+        float: "left",
+        paddingLeft: "1%",
+        paddingTop: "1%",
+        paddingBottom: "1%"
+    },
+    rowIcons: {
+        fontWeight: "lighter",
+        fontSize: "10px",
+        paddingLeft: "9px",
+        paddingRight: "9px",
+        marginRight: "5px"
+    },
+    activeClass: {
+        background: "#f00"
     }
 }));

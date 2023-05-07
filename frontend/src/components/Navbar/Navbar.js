@@ -68,15 +68,15 @@ const Navbar = () => {
                             <div className={classes.dropdownContent}>
                                 <Typography className={subMenuClasses} component={Link} to='/'>Additional Costs</Typography>
                                 <Typography className={subMenuClasses} component={Link} to='/'>Additional Factors</Typography>
-                                <Typography className={subMenuClasses} component={Link} to='/carriers'>Carriers</Typography>
+                                <Typography className={subMenuClasses} component={Link} to='/config/carriers'>Carriers</Typography>
                                 <Typography className={subMenuClasses} component={Link} to='/'>Conversions</Typography>
-                                <Typography className={subMenuClasses} component={Link} to='/fuel-prices'>Fuel Prices</Typography>
-                                <Typography className={subMenuClasses} component={Link} to='/fuel-corrections'>Fuel Corrections</Typography>
+                                <Typography className={subMenuClasses} component={Link} to='/config/fuel-prices'>Fuel Prices</Typography>
+                                <Typography className={subMenuClasses} component={Link} to='/config/fuel-corrections'>Fuel Corrections</Typography>
                                 <Typography className={subMenuClasses} component={Link} to='/'>Curerncy Conversions</Typography>
                                 <Typography className={subMenuClasses} component={Link} to='/'>Regions</Typography>
                                 <Typography className={subMenuClasses} component={Link} to='/'>Zones</Typography>
                                 <Typography className={subMenuClasses} component={Link} to='/'>Taxonomy Manager</Typography>
-                                <Typography className={subMenuClasses} component={Link} to='/'>Master Data</Typography>
+                                <Typography className={subMenuClasses} component={Link} to='/config/master-data'>Master Data</Typography>
                             </div>
                         </div>
                         <div className={dropdownClasses}>

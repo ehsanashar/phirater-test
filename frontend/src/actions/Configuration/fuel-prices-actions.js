@@ -8,7 +8,7 @@ const findFuelPricesByCriteriaAsync = (data) => {
 
 export const findFuelPricesByCriteria = (criteria = {}) => async (dispatch) => {
     try {
-        API.post('/fuel-prices/findByCriteria', criteria)
+        API.post('/config/fuel-prices/findByCriteria', criteria)
             .then(res => {
                 dispatch(findFuelPricesByCriteriaAsync(res.data))
             })
@@ -23,7 +23,7 @@ export const findFuelPricesByCriteria = (criteria = {}) => async (dispatch) => {
 
 export const createFuelPrice = (fuelPrice) => async (dispatch) => {
     try {
-        API.post('/fuel-prices/createFuelPrice', fuelPrice)
+        API.post('/config/fuel-prices/createFuelPrice', fuelPrice)
             .then(res => {
                 toast.success('Fuel Price created.')
                 dispatch(findFuelPricesByCriteria())
@@ -38,7 +38,7 @@ export const createFuelPrice = (fuelPrice) => async (dispatch) => {
 
 export const updateFuelPrice = (id, fuelPrice) => async (dispatch) => {
     try {
-        API.patch(`/fuel-prices/updateFuelPrice/${id}`, fuelPrice)
+        API.patch(`/config/fuel-prices/updateFuelPrice/${id}`, fuelPrice)
             .then(res => {
                 toast.success('Fuel Price updated.')
                 dispatch(findFuelPricesByCriteria())
@@ -53,7 +53,7 @@ export const updateFuelPrice = (id, fuelPrice) => async (dispatch) => {
 
 export const deleteFuelPrice = (id) => async (dispatch) => {
     try {
-        API.delete(`/fuel-prices/deleteFuelPrice/${id}`)
+        API.delete(`/config/fuel-prices/deleteFuelPrice/${id}`)
             .then(res => {
                 dispatch(findFuelPricesByCriteria())
             })

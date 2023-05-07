@@ -6,11 +6,15 @@ import authReducer from './authReducer'
 import carriersReducer from "./Configuration/carriersReducer"
 import fuelPricesReducer from "./Configuration/fuelPricesReducer"
 import fuelCorrectionsReducer from "./Configuration/fuelCorrectionsReducer"
+import transportModesReducer from "./Configuration/MasterData/transportModesReducer"
+import locationsReducer from "./Configuration/MasterData/locationsReducer"
 
 export default combineReducers({
     authReducer,
     // Configuration
     carriersReducer,
     fuelPricesReducer,
-    fuelCorrectionsReducer
+    fuelCorrectionsReducer,
+    transportModesReducer,
+    locationsReducer
 })

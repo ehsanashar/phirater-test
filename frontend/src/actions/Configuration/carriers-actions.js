@@ -8,7 +8,7 @@ const findByCriteriaAsync = (data) => {
 
 export const findByCriteria = (criteria = {}) => async (dispatch) => {
     try {
-        API.post('/carriers/findByCriteria', criteria)
+        API.post('/config/carriers/findByCriteria', criteria)
             .then(res => {
                 dispatch(findByCriteriaAsync(res.data))
             })
@@ -23,7 +23,7 @@ export const findByCriteria = (criteria = {}) => async (dispatch) => {
 
 export const createCarrier = (carrier) => async (dispatch) => {
     try {
-        API.post('/carriers/createCarrier', carrier)
+        API.post('/config/carriers/createCarrier', carrier)
             .then(res => {
                 toast.success('Carrier created.')
                 dispatch(findByCriteria())
@@ -38,7 +38,7 @@ export const createCarrier = (carrier) => async (dispatch) => {
 
 export const updateCarrier = (id, carrier) => async (dispatch) => {
     try {
-        API.patch(`/carriers/updateCarrier/${id}`, carrier)
+        API.patch(`/config/carriers/updateCarrier/${id}`, carrier)
             .then(res => {
                 toast.success('Carrier updated.')
                 dispatch(findByCriteria())
@@ -53,7 +53,7 @@ export const updateCarrier = (id, carrier) => async (dispatch) => {
 
 export const deleteCarrier = (id) => async (dispatch) => {
     try {
-        API.delete(`/carriers/deleteCarrier/${id}`)
+        API.delete(`/config/carriers/deleteCarrier/${id}`)
             .then(res => {
                 dispatch(findByCriteria())
             })

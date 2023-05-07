@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import useStyles from '../../styles'
 import { useDispatch } from "react-redux"
-import { faFile, faList, faPencil, faTrash, faMoneyBill } from '@fortawesome/free-solid-svg-icons'
+import { faFile, faList, faMoneyBill } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     createFuelPrice,
@@ -16,6 +16,8 @@ import FilterModal from "../../Utilities/FilterModal"
 import FormatDate from "../../Utilities/FormatDate"
 import ShowCriteriaWidget from "../../Utilities/ShowCriteriaWidget"
 import Actions from "../../Utilities/Actions"
+import RowActions from "../../Utilities/RowActions"
+import SubmitActions from "../../Utilities/SubmitActions"
 
 const FuelPrices = () => {
     const classes = useStyles()
@@ -102,13 +104,13 @@ const FuelPrices = () => {
     }
 
     const exportData = () => {
-        
+
     }
 
     return (
         <div className="container-fluid">
             <div className="row">
-                <div className={!detail ? "col-lg-12 col-md-12 col-sm-12" : "col-lg-8 col-md-8 col-sm-8"} style={{ 'paddingRight': 0 }}>
+                <div className={!detail ? "col-lg-12 col-md-12 col-sm-12" : "col-lg-8 col-md-8 col-sm-8"} style={{ 'paddingRight': 0, "paddingLeft": 0 }}>
                     <section className="section">
                         <header className={classes.header}>
                             <div className="row">
@@ -152,12 +154,12 @@ const FuelPrices = () => {
                                                         <td><FormatDate date={item.valid_until} /></td>
                                                         <td>{item.carrier}</td>
                                                         <td style={{ "textAlign": "right" }}>
-                                                            <button className="btn btn-primary">
-                                                                <FontAwesomeIcon icon={faPencil} onClick={e => setEdit(item)} />
-                                                            </button>
-                                                            <button className="btn btn-warning">
-                                                                <FontAwesomeIcon icon={faTrash} onClick={e => deleteHandle(item._id)} />
-                                                            </button>
+                                                            <RowActions
+                                                                setEdit={setEdit}
+                                                                deleteHandle={deleteHandle}
+                                                                item={item}
+                                                                classes={classes}
+                                                            />
                                                         </td>
                                                     </tr>
                                                 })
@@ -248,16 +250,7 @@ const FuelPrices = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="form-group">
-                                <div className="row mt-2">
-                                    <div className="col-lg-3 col-md-3 col-sm-3 offset-6">
-                                        <button type="button" className="btn btn-default" onClick={e => clear()}>Cancel</button>
-                                    </div>
-                                    <div className="col-lg-3 col-md-3 col-sm-3">
-                                        <button type="button" className="btn btn-warning" onClick={e => submitHandle()}>{detail?.action === 'add' ? 'Create' : 'Update'}</button>
-                                    </div>
-                                </div>
-                            </div>
+                            <SubmitActions clear={clear} submitHandle={submitHandle} detail={detail} />
                         </div>
 
                     </section>

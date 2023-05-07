@@ -8,7 +8,7 @@ const findFuelCorrectionsByCriteriaAsync = (data) => {
 
 export const findFuelCorrectionsByCriteria = (criteria = {}) => async (dispatch) => {
     try {
-        API.post('/fuel-corrections/findByCriteria', criteria)
+        API.post('/config/fuel-corrections/findByCriteria', criteria)
             .then(res => {
                 dispatch(findFuelCorrectionsByCriteriaAsync(res.data))
             })
@@ -23,7 +23,7 @@ export const findFuelCorrectionsByCriteria = (criteria = {}) => async (dispatch)
 
 export const createFuelCorrection = (fuelCorrection) => async (dispatch) => {
     try {
-        API.post('/fuel-corrections/createFuelCorrection', fuelCorrection)
+        API.post('/config/fuel-corrections/createFuelCorrection', fuelCorrection)
             .then(res => {
                 toast.success('Fuel Corrections created.')
                 dispatch(findFuelCorrectionsByCriteria())
@@ -38,7 +38,7 @@ export const createFuelCorrection = (fuelCorrection) => async (dispatch) => {
 
 export const updateFuelCorrection = (id, fuelCorrection) => async (dispatch) => {
     try {
-        API.patch(`/fuel-corrections/updateFuelCorrection/${id}`, fuelCorrection)
+        API.patch(`/config/fuel-corrections/updateFuelCorrection/${id}`, fuelCorrection)
             .then(res => {
                 toast.success('Fuel Correction updated.')
                 dispatch(findFuelCorrectionsByCriteria())
@@ -53,7 +53,7 @@ export const updateFuelCorrection = (id, fuelCorrection) => async (dispatch) => 
 
 export const deleteFuelCorrection = (id) => async (dispatch) => {
     try {
-        API.delete(`/fuel-corrections/deleteFuelCorrection/${id}`)
+        API.delete(`/config/fuel-corrections/deleteFuelCorrection/${id}`)
             .then(res => {
                 dispatch(findFuelCorrectionsByCriteria())
             })

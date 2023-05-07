@@ -26,7 +26,11 @@ export const findByCriteria = async (req, res) => {
             }
         )
     } catch (error) {
-        res.status(500).json({ 'message': error.message })
+        res.status(500).json({
+            'status': 500,
+            'message': error.message,
+            'data': []
+        })
     }
 }
 
@@ -45,7 +49,11 @@ export const createCarrier = async (req, res) => {
             }
         )
     } catch (error) {
-        res.status(409).json({ 'message': error.message })
+        res.status(500).json({
+            'status': 500,
+            'message': error.message,
+            'data': []
+        })
     }
 }
 
@@ -68,7 +76,11 @@ export const updateCarrier = async (req, res) => {
             }
         )
     } catch (error) {
-        res.status(409).json({ 'message': error.message })
+        res.status(500).json({
+            'status': 500,
+            'message': error.message,
+            'data': []
+        })
     }
 }
 
@@ -90,6 +102,10 @@ export const deleteCarrier = async (req, res) => {
             }
         )
     } catch (error) {
-        res.status(500).json({ 'message': error.message })
+        res.status(500).json({
+            'status': 500,
+            'message': error.message,
+            'data': []
+        })
     }
 }
