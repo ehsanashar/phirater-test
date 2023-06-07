@@ -6,6 +6,10 @@ const findFuelCorrectionsByCriteriaAsync = (data) => {
     return { type: 'FIND_FUEL_CORRECTIONS_BY_CRITERIA', payload: data }
 }
 
+const messagesAsync = (data) => {
+    return { type: 'MESSAGES', payload: data }
+}
+
 export const findFuelCorrectionsByCriteria = (criteria = {}) => async (dispatch) => {
     try {
         API.post('/config/fuel-corrections/findByCriteria', criteria)
@@ -13,7 +17,7 @@ export const findFuelCorrectionsByCriteria = (criteria = {}) => async (dispatch)
                 dispatch(findFuelCorrectionsByCriteriaAsync(res.data))
             })
             .catch(error => {
-                console.log(error.message)
+                dispatch(messagesAsync(error.response))
             })
 
     } catch (error) {
@@ -25,11 +29,11 @@ export const createFuelCorrection = (fuelCorrection) => async (dispatch) => {
     try {
         API.post('/config/fuel-corrections/createFuelCorrection', fuelCorrection)
             .then(res => {
-                toast.success('Fuel Corrections created.')
+                dispatch(messagesAsync(res))
                 dispatch(findFuelCorrectionsByCriteria())
             })
             .catch(error => {
-                console.log(error)
+                dispatch(messagesAsync(error.response))
             })
     } catch (error) {
         console.log(error.message)
@@ -40,11 +44,11 @@ export const updateFuelCorrection = (id, fuelCorrection) => async (dispatch) => 
     try {
         API.patch(`/config/fuel-corrections/updateFuelCorrection/${id}`, fuelCorrection)
             .then(res => {
-                toast.success('Fuel Correction updated.')
+                dispatch(messagesAsync(res))
                 dispatch(findFuelCorrectionsByCriteria())
             })
             .catch(error => {
-                console.log(error.message)
+                dispatch(messagesAsync(error.response))
             })
     } catch (error) {
         console.log(error.message)
@@ -55,10 +59,11 @@ export const deleteFuelCorrection = (id) => async (dispatch) => {
     try {
         API.delete(`/config/fuel-corrections/deleteFuelCorrection/${id}`)
             .then(res => {
+                dispatch(messagesAsync(res))
                 dispatch(findFuelCorrectionsByCriteria())
             })
             .catch(error => {
-                console.log(error.message)
+                dispatch(messagesAsync(error.response))
             })
     } catch (error) {
         console.log(error.message)

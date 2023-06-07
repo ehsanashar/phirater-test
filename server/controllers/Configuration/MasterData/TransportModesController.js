@@ -1,6 +1,7 @@
 import mongoose from "mongoose"
 import TransportMode from "../../../models/Configuration/MasterData/TransportMode.js"
 import TransportModeTransformer from "./Transformers/TransportModeTransformer.js"
+import { FormatErrors } from "../../../utilities/ErrorFormatter.js"
 
 
 export const findByCriteria = async (req, res) => {
@@ -21,12 +22,18 @@ export const findByCriteria = async (req, res) => {
         res.status(200).json(
             {
                 'status': 200,
-                'message': 'success',
-                'data': TransportModeTransformer.transformCollection(transportModes)
+                'messages': [],
+                'data': TransportModeTransformer.transformCollection(transportModes),
+                'type': 'success'
             }
         )
     } catch (error) {
-        res.status(500).json({ 'message': error.message })
+        res.status(500).json({
+            'status': 500,
+            'messages': FormatErrors(error.errors),
+            'data': [],
+            'type': 'danger'
+        })
     }
 }
 
@@ -40,12 +47,18 @@ export const createTransportMode = async (req, res) => {
         res.status(201).json(
             {
                 'status': 201,
-                'message': 'Transport mode added.',
-                'data': TransportModeTransformer.transform(newTransportMode)
+                'messages': ['Transport mode added.'],
+                'data': TransportModeTransformer.transform(newTransportMode),
+                'type': 'success'
             }
         )
     } catch (error) {
-        res.status(409).json({ 'message': error.message })
+        res.status(500).json({
+            'status': 500,
+            'messages': FormatErrors(error.errors),
+            'data': [],
+            'type': 'danger'
+        })
     }
 }
 
@@ -55,20 +68,31 @@ export const updateTransportMode = async (req, res) => {
 
     try {
         if (!mongoose.Types.ObjectId.isValid(_id)) {
-            res.status(404).json({ 'message': 'Transport mode not found' })
+            res.status(404).json({
+                'status': 404,
+                'messages': ['Transport mode not found.'],
+                'data': [],
+                'type': 'danger'
+            })
         }
 
         const updateTransportMode = await TransportMode.findByIdAndUpdate(_id, transportMode, { new: true })
 
-        res.status(201).json(
+        res.status(200).json(
             {
-                'status': 201,
-                'message': 'Transport mode updated.',
-                'data': TransportModeTransformer.transform(updateTransportMode)
+                'status': 200,
+                'messages': ['Transport mode updated.'],
+                'data': TransportModeTransformer.transform(updateTransportMode),
+                'type': 'success'
             }
         )
     } catch (error) {
-        res.status(409).json({ 'message': error.message })
+        res.status(500).json({
+            'status': 500,
+            'messages': FormatErrors(error.errors),
+            'data': [],
+            'type': 'danger'
+        })
     }
 }
 
@@ -77,20 +101,31 @@ export const deleteTransportMode = async (req, res) => {
 
     try {
         if (!mongoose.Types.ObjectId.isValid(_id)) {
-            res.status(404).json({ 'message': 'Transport mode not found' })
+            res.status(404).json({
+                'status': 404,
+                'messages': ['Transport mode not found.'],
+                'data': [],
+                'type': 'danger'
+            })
         }
 
         await TransportMode.findByIdAndDelete(_id);
 
-        res.status(201).json(
+        res.status(200).json(
             {
-                'status': 201,
-                'message': 'Transport mode deleted.',
-                'data': []
+                'status': 200,
+                'messages': ['Transport mode deleted.'],
+                'data': [],
+                'type': 'success'
             }
         )
     } catch (error) {
-        res.status(500).json({ 'message': error.message })
+        res.status(500).json({
+            'status': 500,
+            'messages': FormatErrors(error.errors),
+            'data': [],
+            'type': 'danger'
+        })
     }
 }
 
@@ -99,7 +134,12 @@ export const setDefault = async (req, res) => {
 
     try {
         if (!mongoose.Types.ObjectId.isValid(_id)) {
-            res.status(404).json({ 'message': 'Transport mode not found' })
+            res.status(404).json({
+                'status': 404,
+                'messages': ['Transport mode not found.'],
+                'data': [],
+                'type': 'danger'
+            })
         }
 
         await TransportMode.findOneAndUpdate(
@@ -109,15 +149,21 @@ export const setDefault = async (req, res) => {
 
         await TransportMode.findByIdAndUpdate(_id, { is_default: true }, { new: true })
 
-        res.status(201).json(
+        res.status(200).json(
             {
-                'status': 201,
-                'message': 'Set default transport mode.',
-                'data': []
+                'status': 200,
+                'messages': ['Set default transport mode.'],
+                'data': [],
+                'type': 'success'
             }
         )
     } catch (error) {
-        res.status(500).json({ 'message': error.message })
+        res.status(500).json({
+            'status': 500,
+            'messages': FormatErrors(error.errors),
+            'data': [],
+            'type': 'danger'
+        })
     }
 }
 

@@ -3,11 +3,11 @@ import mongoose from "mongoose"
 const carrierSchema = mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: [true, `Field 'name' is required.`]
     },
     country: {
         type: String,
-        required: true
+        required: [true, `Field 'country' is required.`]
     },
     address: {
         type: String,

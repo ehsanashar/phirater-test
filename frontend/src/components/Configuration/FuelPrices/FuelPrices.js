@@ -18,11 +18,14 @@ import ShowCriteriaWidget from "../../Utilities/ShowCriteriaWidget"
 import Actions from "../../Utilities/Actions"
 import RowActions from "../../Utilities/RowActions"
 import SubmitActions from "../../Utilities/SubmitActions"
+import Messages from "../../Utilities/Messages"
 
 const FuelPrices = () => {
     const classes = useStyles()
     const fuelPrices = useSelector((state) => state.fuelPricesReducer)
     const carriers = useSelector((state) => state.carriersReducer)
+    const messagesObj = useSelector(state => state.messagesReducer)
+
     const dispatch = useDispatch()
     const [detail, setDetail] = useState(null)
     const [currentPageData, setCurrentPageData] = useState(fuelPrices.slice(0, 10))
@@ -94,6 +97,12 @@ const FuelPrices = () => {
     }
 
     const clear = () => {
+        if (messagesObj.type === 'success') {
+            closeDetail()
+        }
+    }
+
+    const closeDetail = () => {
         setFuelPrice({
             carrier: '',
             price: '',
@@ -101,10 +110,13 @@ const FuelPrices = () => {
             valid_until: '',
         })
         setDetail(null)
+
+        setDetail(null)
+        clearMessages()
     }
 
-    const exportData = () => {
-
+    const clearMessages = () => {
+        dispatch({ type: 'MESSAGES', payload: {} })
     }
 
     return (
@@ -119,10 +131,6 @@ const FuelPrices = () => {
                                     <h3>Fuel Prices ({fuelPrices.length ? fuelPrices.length : 0})</h3>
                                 </div>
                                 <div className="col-lg-7 col-md-7 col-sm-7" style={{ "textAlign": "right" }}>
-                                    <button className="btn btn-small btn-warning text-light mx-1" onClick={e => exportData()}>
-                                        <FontAwesomeIcon icon={faFile} />
-                                    </button>
-
                                     <Actions reload={reload} setShowModal={setShowModal} setDetail={setDetail} />
                                 </div>
                             </div>
@@ -130,6 +138,10 @@ const FuelPrices = () => {
 
                         {showCriteria ?
                             <ShowCriteriaWidget criteria={criteria} setShowModal={setShowModal} /> : <></>
+                        }
+
+                        {messagesObj.type === 'success' ?
+                            <Messages messagesObj={messagesObj} clearMessages={clearMessages} /> : <></>
                         }
 
                         <div className="row">
@@ -195,12 +207,16 @@ const FuelPrices = () => {
                                 </div>
                                 <div className="col-lg-5 col-md-5 col-sm-5" style={{ "textAlign": "right" }}>
                                     <button className="btn btn-small btn-warning text-light" >
-                                        <FontAwesomeIcon icon={faList} onClick={e => clear()} />
+                                        <FontAwesomeIcon icon={faList} onClick={e => closeDetail()} />
                                     </button>
                                 </div>
                             </div>
-
                         </header>
+
+                        {messagesObj.type === 'danger' ?
+                            <Messages messagesObj={messagesObj} clearMessages={clearMessages} /> : <></>
+                        }
+
                         <div className="row mt-2 p-1">
                             <div className="form-group">
                                 <div className="row mb-2">
@@ -216,7 +232,6 @@ const FuelPrices = () => {
                                                 })
                                             }
                                         </select>
-                                        {/* <input type='text' className="form-control" value={fuelPrice.carrier} onChange={e => setFuelPrice({ ...fuelPrice, carrier: e.target.value })} /> */}
                                     </div>
                                 </div>
                             </div>
@@ -250,7 +265,7 @@ const FuelPrices = () => {
                                     </div>
                                 </div>
                             </div>
-                            <SubmitActions clear={clear} submitHandle={submitHandle} detail={detail} />
+                            <SubmitActions clear={closeDetail} submitHandle={submitHandle} detail={detail} />
                         </div>
 
                     </section>

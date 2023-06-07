@@ -18,11 +18,13 @@ import {
     setDefault
 } from "../../../actions/Configuration/MasterData/location-actions"
 import SubmitActions from "../../Utilities/SubmitActions"
+import Messages from "../../Utilities/Messages"
 
 const Locations = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
     const locations = useSelector((state) => state.locationsReducer)
+    const messagesObj = useSelector(state => state.messagesReducer)
 
     useEffect(() => {
         dispatch(findLocationsByCriteria())
@@ -90,10 +92,22 @@ const Locations = () => {
     }
 
     const clear = () => {
+        if (messagesObj.type === 'success') {
+            closeDetail()
+        }
+    }
+
+    const closeDetail = () => {
         setLocation({
             name: '',
         })
+
         setDetail(null)
+        clearMessages()
+    }
+
+    const clearMessages = () => {
+        dispatch({ type: 'MESSAGES', payload: {} })
     }
 
     return (
@@ -127,6 +141,11 @@ const Locations = () => {
                             }
 
                             <div className="row">
+
+                                {messagesObj.type === 'success' ?
+                                    <Messages messagesObj={messagesObj} clearMessages={clearMessages} /> : <></>
+                                }
+
                                 {locations?.length > 0 ?
                                     <div className="table">
                                         <table className="table table-striped">
@@ -194,12 +213,16 @@ const Locations = () => {
                                 </div>
                                 <div className="col-lg-5 col-md-5 col-sm-5" style={{ "textAlign": "right" }}>
                                     <button className="btn btn-small btn-warning text-light" >
-                                        <FontAwesomeIcon icon={faList} onClick={e => clear()} />
+                                        <FontAwesomeIcon icon={faList} onClick={e => closeDetail()} />
                                     </button>
                                 </div>
                             </div>
-
                         </header>
+
+                        {messagesObj.type === 'danger' ?
+                            <Messages messagesObj={messagesObj} clearMessages={clearMessages} /> : <></>
+                        }
+
                         <div className="row mt-2 p-1">
                             <div className="form-group">
                                 <div className="row mb-2">
@@ -211,7 +234,7 @@ const Locations = () => {
                                     </div>
                                 </div>
                             </div>
-                            <SubmitActions clear={clear} submitHandle={submitHandle} detail={detail} />
+                            <SubmitActions clear={closeDetail} submitHandle={submitHandle} detail={detail} />
                         </div>
 
                     </section>

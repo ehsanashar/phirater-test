@@ -4,19 +4,19 @@ const fuelCorrectionSchema = mongoose.Schema({
     carrier: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Carrier",
-        required: true
+        required: [true, `Field 'carrier' is required.`]
     },
     from: {
         type: Number,
-        required: true
+        required: [true, `Field 'from' is required.`]
     },
     to: {
         type: Number,
-        required: true
+        required: [true, `Field 'to' is required.`]
     },
     correction: {
         type: Number,
-        required: true
+        required: [true, `Field 'correction' is required.`]
     },
     created_at: {
         type: Date,

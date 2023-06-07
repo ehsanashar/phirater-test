@@ -11,10 +11,14 @@ import ShowCriteriaWidget from "../../Utilities/ShowCriteriaWidget"
 import Actions from "../../Utilities/Actions"
 import RowActions from "../../Utilities/RowActions"
 import SubmitActions from "../../Utilities/SubmitActions"
+import Messages from "../../Utilities/Messages"
 
 const Carriers = () => {
     const classes = useStyles()
-    const carriers = useSelector((state) => state.carriersReducer)
+
+    const carriers = useSelector(state => state.carriersReducer)
+    const messagesObj = useSelector(state => state.messagesReducer)
+
     const dispatch = useDispatch()
     const [detail, setDetail] = useState(null)
     const [currentPageData, setCurrentPageData] = useState(carriers.slice(0, 10))
@@ -86,6 +90,12 @@ const Carriers = () => {
     }
 
     const clear = () => {
+        if (messagesObj.type === 'success') {
+            closeDetail()
+        }
+    }
+
+    const closeDetail = () => {
         setCarrier({
             name: '',
             country: '',
@@ -96,7 +106,13 @@ const Carriers = () => {
             vat: '',
             city: ''
         })
+
         setDetail(null)
+        clearMessages()
+    }
+
+    const clearMessages = () => {
+        dispatch({ type: 'MESSAGES', payload: {} })
     }
 
     return (
@@ -119,6 +135,11 @@ const Carriers = () => {
                         {showCriteria ?
                             <ShowCriteriaWidget criteria={criteria} setShowModal={setShowModal} /> : <></>
                         }
+
+                        {messagesObj.type === 'success' ?
+                            <Messages messagesObj={messagesObj} clearMessages={clearMessages} /> : <></>
+                        }
+
 
                         <div className="row">
                             {carriers.length > 0 ?
@@ -189,12 +210,16 @@ const Carriers = () => {
                                 </div>
                                 <div className="col-lg-5 col-md-5 col-sm-5" style={{ "textAlign": "right" }}>
                                     <button className="btn btn-small btn-warning text-light" >
-                                        <FontAwesomeIcon icon={faList} onClick={e => clear()} />
+                                        <FontAwesomeIcon icon={faList} onClick={e => closeDetail()} />
                                     </button>
                                 </div>
                             </div>
-
                         </header>
+
+                        {messagesObj.type === 'danger' ?
+                            <Messages messagesObj={messagesObj} clearMessages={clearMessages} /> : <></>
+                        }
+
                         <div className="row mt-2 p-1">
                             <div className="form-group">
                                 <div className="row mb-2">
@@ -276,9 +301,8 @@ const Carriers = () => {
                                     </div>
                                 </div>
                             </div>
-                            <SubmitActions clear={clear} submitHandle={submitHandle} detail={detail} />
+                            <SubmitActions clear={closeDetail} submitHandle={submitHandle} detail={detail} />
                         </div>
-
                     </section>
                 </div>
             </div >

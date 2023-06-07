@@ -6,6 +6,10 @@ const findByCriteriaAsync = (data) => {
     return { type: 'FIND_BY_CRITERIA', payload: data }
 }
 
+const messagesAsync = (data) => {
+    return { type: 'MESSAGES', payload: data }
+}
+
 export const findByCriteria = (criteria = {}) => async (dispatch) => {
     try {
         API.post('/config/carriers/findByCriteria', criteria)
@@ -13,7 +17,7 @@ export const findByCriteria = (criteria = {}) => async (dispatch) => {
                 dispatch(findByCriteriaAsync(res.data))
             })
             .catch(error => {
-                console.log(error.message)
+                dispatch(messagesAsync(error.response))
             })
 
     } catch (error) {
@@ -25,11 +29,11 @@ export const createCarrier = (carrier) => async (dispatch) => {
     try {
         API.post('/config/carriers/createCarrier', carrier)
             .then(res => {
-                toast.success('Carrier created.')
                 dispatch(findByCriteria())
+                dispatch(messagesAsync(res))
             })
             .catch(error => {
-                console.log(error)
+                dispatch(messagesAsync(error.response))
             })
     } catch (error) {
         console.log(error.message)
@@ -40,11 +44,11 @@ export const updateCarrier = (id, carrier) => async (dispatch) => {
     try {
         API.patch(`/config/carriers/updateCarrier/${id}`, carrier)
             .then(res => {
-                toast.success('Carrier updated.')
                 dispatch(findByCriteria())
+                dispatch(messagesAsync(res))
             })
             .catch(error => {
-                console.log(error.message)
+                dispatch(messagesAsync(error.response))
             })
     } catch (error) {
         console.log(error.message)
@@ -56,9 +60,10 @@ export const deleteCarrier = (id) => async (dispatch) => {
         API.delete(`/config/carriers/deleteCarrier/${id}`)
             .then(res => {
                 dispatch(findByCriteria())
+                dispatch(messagesAsync(res))
             })
             .catch(error => {
-                console.log(error.message)
+                dispatch(messagesAsync(error.response))
             })
     } catch (error) {
         console.log(error.message)

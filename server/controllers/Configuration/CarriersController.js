@@ -1,6 +1,7 @@
 import mongoose from "mongoose"
 import Carrier from "../../models/Configuration/Carrier.js"
 import CarrierTransformer from "./Transformers/CarrierTransformer.js"
+import { FormatErrors } from "../../utilities/ErrorFormatter.js"
 
 
 export const findByCriteria = async (req, res) => {
@@ -21,15 +22,17 @@ export const findByCriteria = async (req, res) => {
         res.status(200).json(
             {
                 'status': 200,
-                'message': 'success',
-                'data': CarrierTransformer.transformCollection(carriers)
+                'messages': [],
+                'data': CarrierTransformer.transformCollection(carriers),
+                'type': 'success'
             }
         )
     } catch (error) {
         res.status(500).json({
             'status': 500,
-            'message': error.message,
-            'data': []
+            'messages': FormatErrors(error.errors),
+            'data': [],
+            'type': 'danger'
         })
     }
 }
@@ -44,15 +47,17 @@ export const createCarrier = async (req, res) => {
         res.status(201).json(
             {
                 'status': 201,
-                'message': 'Carrier added.',
-                'data': CarrierTransformer.transform(newCarrier)
+                'messages': ['Carrier added.'],
+                'data': CarrierTransformer.transform(newCarrier),
+                'type': 'success'
             }
         )
     } catch (error) {
         res.status(500).json({
             'status': 500,
-            'message': error.message,
-            'data': []
+            'messages': FormatErrors(error.errors),
+            'data': [],
+            'type': 'danger'
         })
     }
 }
@@ -63,23 +68,30 @@ export const updateCarrier = async (req, res) => {
 
     try {
         if (!mongoose.Types.ObjectId.isValid(_id)) {
-            res.status(404).json({ 'message': 'carrier not found' })
+            res.status(404).json({
+                'status': 404,
+                'messages': ['Carrier not found.'],
+                'data': [],
+                'type': 'danger'
+            })
         }
 
         const updateCarrier = await Carrier.findByIdAndUpdate(_id, carrier, { new: true })
 
-        res.status(201).json(
+        res.status(200).json(
             {
-                'status': 201,
-                'message': 'Carrier updated.',
-                'data': CarrierTransformer.transform(updateCarrier)
+                'status': 200,
+                'messages': ['Carrier updated.'],
+                'data': CarrierTransformer.transform(updateCarrier),
+                'type': 'success'
             }
         )
     } catch (error) {
         res.status(500).json({
             'status': 500,
-            'message': error.message,
-            'data': []
+            'messages': FormatErrors(error.errors),
+            'data': [],
+            'type': 'danger'
         })
     }
 }
@@ -89,23 +101,30 @@ export const deleteCarrier = async (req, res) => {
 
     try {
         if (!mongoose.Types.ObjectId.isValid(_id)) {
-            res.status(404).json({ 'message': 'carrier not found' })
+            res.status(404).json(res.status(404).json({
+                'status': 404,
+                'messages': ['Carrier not found.'],
+                'data': [],
+                'type': 'danger'
+            }))
         }
 
         await Carrier.findByIdAndDelete(_id);
 
-        res.status(201).json(
+        res.status(200).json(
             {
-                'status': 201,
-                'message': 'Carrier deleted.',
-                'data': []
+                'status': 200,
+                'messages': ['Carrier deleted.'],
+                'data': [],
+                'type': 'success'
             }
         )
     } catch (error) {
         res.status(500).json({
             'status': 500,
-            'message': error.message,
-            'data': []
+            'messages': FormatErrors(error.errors),
+            'data': [],
+            'type': 'danger'
         })
     }
 }

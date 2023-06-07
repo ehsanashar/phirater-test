@@ -3,11 +3,10 @@ import mongoose from "mongoose"
 const locationSchema = mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: [true, `Field 'name' is required.`]
     },
     is_default: {
         type: Boolean,
-        required: true,
         default: false
     },
     created_at: {

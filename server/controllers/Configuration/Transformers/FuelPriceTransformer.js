@@ -7,6 +7,7 @@ const FuelPriceTransformer = class {
      * @returns 
      */
     static transform = (fuelPrice) => {
+        console.log(fuelPrice)
         return {
             '_id': fuelPrice._id,
             'price': fuelPrice.price,

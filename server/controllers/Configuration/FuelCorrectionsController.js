@@ -1,6 +1,7 @@
 import mongoose from "mongoose"
 import FuelCorrection from "../../models/Configuration/FuelCorrection.js"
 import FuelCorrectionTransformer from "./Transformers/FuelCorrectionTransformer.js"
+import { FormatErrors } from "../../utilities/ErrorFormatter.js"
 
 export const findByCriteria = async (req, res) => {
     const criteria = req.body
@@ -20,12 +21,18 @@ export const findByCriteria = async (req, res) => {
         res.status(200).json(
             {
                 'status': 200,
-                'message': 'success',
-                'data': FuelCorrectionTransformer.transformCollection(fuelCorrections)
+                'messages': [],
+                'data': FuelCorrectionTransformer.transformCollection(fuelCorrections),
+                'type': 'success'
             }
         )
     } catch (error) {
-        res.status(500).json({ 'message': error.message })
+        res.status(500).json({
+            'status': 500,
+            'messages': FormatErrors(error.errors),
+            'data': [],
+            'type': 'danger'
+        })
     }
 }
 
@@ -39,12 +46,18 @@ export const createFuelCorrection = async (req, res) => {
         res.status(201).json(
             {
                 'status': 201,
-                'message': 'Fuel Correction added.',
-                'data': FuelCorrectionTransformer.transform(newfuelCorrection)
+                'messages': ['Fuel Correction added.'],
+                'data': FuelCorrectionTransformer.transform(newfuelCorrection),
+                'type': 'success'
             }
         )
     } catch (error) {
-        res.status(409).json({ 'message': error.message })
+        res.status(500).json({
+            'status': 500,
+            'messages': FormatErrors(error.errors),
+            'data': [],
+            'type': 'danger'
+        })
     }
 }
 
@@ -54,20 +67,32 @@ export const updateFuelCorrection = async (req, res) => {
 
     try {
         if (!mongoose.Types.ObjectId.isValid(_id)) {
-            res.status(404).json({ 'message': 'fuel correction not found' })
+            res.status(404).json({
+                'status': 404,
+                'messages': ['Fuel correction not found.'],
+                'data': [],
+                'type': 'danger'
+            })
         }
 
         const updatedFuelCorrection = await FuelCorrection.findByIdAndUpdate(_id, fuelCorrection, { new: true })
 
-        res.status(201).json(
+        res.status(200).json(
             {
-                'status': 201,
-                'message': 'Fuel Correction updated.',
-                'data': FuelCorrectionTransformer.transform(updatedFuelCorrection)
+                'status': 200,
+                'messages': 'Fuel Correction updated.',
+                'data': FuelCorrectionTransformer.transform(updatedFuelCorrection),
+                'type': 'success'
             }
         )
     } catch (error) {
-        res.status(409).json({ 'message': error.message })
+        console.log(error)
+        res.status(500).json({
+            'status': 500,
+            'messages': FormatErrors(error.errors),
+            'data': [],
+            'type': 'danger'
+        })
     }
 }
 
@@ -76,19 +101,29 @@ export const deleteFuelCorrection = async (req, res) => {
 
     try {
         if (!mongoose.Types.ObjectId.isValid(_id)) {
-            res.status(404).json({ 'message': 'Fuel Correction not found' })
+            res.status(404).json({
+                'status': 404,
+                'messages': ['Fuel correction not found.'],
+                'data': []
+            })
         }
 
         await FuelCorrection.findByIdAndDelete(_id);
 
-        res.status(201).json(
+        res.status(200).json(
             {
-                'status': 201,
-                'message': 'Fuel Correction deleted.',
-                'data': []
+                'status': 200,
+                'messages': 'Fuel Correction deleted.',
+                'data': [],
+                'type': 'success'
             }
         )
     } catch (error) {
-        res.status(500).json({ 'message': error.message })
+        res.status(500).json({
+            'status': 500,
+            'messages': FormatErrors(error.errors),
+            'data': [],
+            'type': 'danger'
+        })
     }
 }

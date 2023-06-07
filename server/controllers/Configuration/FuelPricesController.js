@@ -1,6 +1,7 @@
 import mongoose from "mongoose"
 import FuelPrice from "../../models/Configuration/FuelPrice.js"
 import FuelPriceTransformer from "./Transformers/FuelPriceTransformer.js"
+import { FormatErrors } from "../../utilities/ErrorFormatter.js"
 
 export const findByCriteria = async (req, res) => {
     const criteria = req.body
@@ -20,12 +21,19 @@ export const findByCriteria = async (req, res) => {
         res.status(200).json(
             {
                 'status': 200,
-                'message': 'success',
-                'data': FuelPriceTransformer.transformCollection(fuelPrices)
+                'messages': [],
+                'data': FuelPriceTransformer.transformCollection(fuelPrices),
+                'type': 'success'
             }
         )
     } catch (error) {
-        res.status(500).json({ 'message': error.message })
+        console.log(error)
+        res.status(500).json({
+            'status': 500,
+            'messages': FormatErrors(error.errors),
+            'data': [],
+            'type': 'danger'
+        })
     }
 }
 
@@ -39,12 +47,18 @@ export const createFuelPrice = async (req, res) => {
         res.status(201).json(
             {
                 'status': 201,
-                'message': 'Fuel Price added.',
-                'data': FuelPriceTransformer.transform(newFuelPrice)
+                'messages': ['Fuel Price added.'],
+                'data': FuelPriceTransformer.transform(newFuelPrice),
+                'type': 'success'
             }
         )
     } catch (error) {
-        res.status(409).json({ 'message': error.message })
+        res.status(500).json({
+            'status': 500,
+            'messages': FormatErrors(error.errors),
+            'data': [],
+            'type': 'danger'
+        })
     }
 }
 
@@ -54,7 +68,12 @@ export const updateFuelPrice = async (req, res) => {
 
     try {
         if (!mongoose.Types.ObjectId.isValid(_id)) {
-            res.status(404).json({ 'message': 'fuel price not found' })
+            res.status(404).json({
+                'status': 404,
+                'messages': ['Fuel price not found.'],
+                'data': [],
+                'type': 'danger'
+            })
         }
 
         const updatedFuelPrice = await FuelPrice.findByIdAndUpdate(_id, fuelPrice, { new: true })
@@ -62,12 +81,18 @@ export const updateFuelPrice = async (req, res) => {
         res.status(200).json(
             {
                 'status': 200,
-                'message': 'Fuel Price updated.',
-                'data': FuelPriceTransformer.transform(updatedFuelPrice)
+                'messages': ['Fuel Price updated.'],
+                'data': FuelPriceTransformer.transform(updatedFuelPrice),
+                'type': 'success'
             }
         )
     } catch (error) {
-        res.status(409).json({ 'message': error.message })
+        res.status(500).json({
+            'status': 500,
+            'messages': FormatErrors(error.errors),
+            'data': [],
+            'type': 'danger'
+        })
     }
 }
 
@@ -76,7 +101,12 @@ export const deleteFuelPrice = async (req, res) => {
 
     try {
         if (!mongoose.Types.ObjectId.isValid(_id)) {
-            res.status(404).json({ 'message': 'Fuel Price not found' })
+            res.status(404).json({
+                'status': 404,
+                'messages': ['Fuel price not found.'],
+                'data': [],
+                'type': 'danger'
+            })
         }
 
         await FuelPrice.findByIdAndDelete(_id);
@@ -84,11 +114,17 @@ export const deleteFuelPrice = async (req, res) => {
         res.status(200).json(
             {
                 'status': 200,
-                'message': 'Fuel Price deleted.',
-                'data': []
+                'messages': ['Fuel Price deleted.'],
+                'data': [],
+                'type': 'success'
             }
         )
     } catch (error) {
-        res.status(500).json({ 'message': error.message })
+        res.status(500).json({
+            'status': 500,
+            'messages': FormatErrors(error.errors),
+            'data': [],
+            'type': 'danger'
+        })
     }
 }
