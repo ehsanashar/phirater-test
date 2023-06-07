@@ -11,6 +11,7 @@ import fuelPricesReducer from "./Configuration/fuelPricesReducer"
 import fuelCorrectionsReducer from "./Configuration/fuelCorrectionsReducer"
 import transportModesReducer from "./Configuration/MasterData/transportModesReducer"
 import locationsReducer from "./Configuration/MasterData/locationsReducer"
+import categoriesReducer from "./Configuration/MasterData/categoriesReducer"
 
 
 export default combineReducers({
@@ -21,5 +22,6 @@ export default combineReducers({
     fuelPricesReducer,
     fuelCorrectionsReducer,
     transportModesReducer,
-    locationsReducer
+    locationsReducer,
+    categoriesReducer
 })

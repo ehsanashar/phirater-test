@@ -12,6 +12,7 @@ import fuelPricesRoutes from './routes/Configuration/fuel-prices-routes.js'
 import fuelCorrectionRoutes from './routes/Configuration/fuel-correction-routes.js'
 import transportModeRoutes from './routes/Configuration/MasterData/transport-mode-routes.js'
 import locationRoutes from './routes/Configuration/MasterData/location-routes.js'
+import categoryRoutes from './routes/Configuration/MasterData/category-routes.js'
 
 const app = express()
 
@@ -28,6 +29,7 @@ app.use('/config/fuel-prices', fuelPricesRoutes)
 app.use('/config/fuel-corrections', fuelCorrectionRoutes)
 app.use('/config/master-data/transport-modes', transportModeRoutes)
 app.use('/config/master-data/locations', locationRoutes)
+app.use('/config/master-data/categories', categoryRoutes)
 
 mongoose.connect(process.env.CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {

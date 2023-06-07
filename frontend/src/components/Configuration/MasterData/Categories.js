@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import useStyles from '../../styles'
 import { useDispatch } from "react-redux"
-import { faCogs, faPencil, faTrash, faList, faCheck } from '@fortawesome/free-solid-svg-icons'
+import { faCogs, faList, faCheck } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useSelector } from 'react-redux'
 import MasterDataNav from "./MasterDataNav"
@@ -10,79 +10,105 @@ import ShowCriteriaWidget from "../../Utilities/ShowCriteriaWidget"
 import SweetPagination from "sweetpagination"
 import FilterModal from "../../Utilities/FilterModal"
 import RowActions from "../../Utilities/RowActions"
+import {
+    findCategoriesByCriteria,
+    createCategory,
+    updateCategory,
+    deleteCategory,
+    setDefault
+} from "../../../actions/Configuration/MasterData/category-actions"
+import SubmitActions from "../../Utilities/SubmitActions"
+import Messages from "../../Utilities/Messages"
 
 const Categories = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
+    const categories = useSelector((state) => state.categoriesReducer)
+    const messagesObj = useSelector(state => state.messagesReducer)
 
     useEffect(() => {
+        dispatch(findCategoriesByCriteria())
     }, [dispatch])
 
-    // const [currentPageData, setCurrentPageData] = useState(transportModes?.slice(0, 10))
+    const [currentPageData, setCurrentPageData] = useState(categories?.slice(0, 10))
+    const [category, setCategory] = useState({
+        name: '',
+    })
 
     const [detail, setDetail] = useState(null)
-    // const [showModal, setShowModal] = useState(false)
-    // const showActions = { 'reload': true, 'filter': false, 'add': true }
-    // const [criteria, setCriteria] = useState([
-    //     { 'key': 'name', 'value': '' }
-    // ])
-    // const [showCriteria, setShowCriteria] = useState(false)
+    const [showModal, setShowModal] = useState(false)
+    const [criteria, setCriteria] = useState([
+        { 'key': 'name', 'value': '' }
+    ])
+    const [showCriteria, setShowCriteria] = useState(false)
 
-    // const setFilter = () => {
-    //     showCriteriaHandle()
-    //     dispatch(findTransportModesByCriteria(criteria))
-    // }
+    const setFilter = () => {
+        showCriteriaHandle()
+        dispatch(findCategoriesByCriteria(criteria))
+    }
 
-    // const showCriteriaHandle = () => {
-    //     let flag = true
-    //     criteria.map(cr => {
-    //         if (cr.value === '') {
-    //             flag = false
-    //         }
-    //     })
+    const showCriteriaHandle = () => {
+        let flag = true
+        criteria.map(cr => {
+            if (cr.value === '') {
+                flag = false
+            }
+        })
 
-    //     setShowCriteria(flag)
-    // }
+        setShowCriteria(flag)
+    }
 
-    // const reload = () => {
-    //     setCriteria([
-    //         { 'key': 'name', 'value': '' }
-    //     ])
-    //     setShowCriteria(false)
-    //     dispatch(findTransportModesByCriteria())
-    // }
+    const reload = () => {
+        setCriteria([
+            { 'key': 'name', 'value': '' }
+        ])
+        setShowCriteria(false)
+        dispatch(findCategoriesByCriteria())
+    }
 
-    // const submitHandle = () => {
-    //     if (transportMode._id) {
-    //         dispatch(updateTransportMode(transportMode._id, transportMode))
-    //     } else {
-    //         dispatch(createTransportMode(transportMode))
-    //     }
+    const submitHandle = () => {
+        if (category._id) {
+            dispatch(updateCategory(category._id, category))
+        } else {
+            dispatch(createCategory(category))
+        }
 
-    //     clear()
-    // }
+        clear()
+    }
 
-    // const deleteHandle = (id) => {
-    //     dispatch(deleteTransportMode(id))
-    // }
+    const deleteHandle = (id) => {
+        dispatch(deleteCategory(id))
+    }
 
-    // const setDefaultTransportModeMode = (id) => {
-    //     dispatch(setDefault(id))
-    // }
+    const setDefaultCategory = (id) => {
+        dispatch(setDefault(id))
+    }
 
-    // const setEdit = (transportMode) => {
-    //     setDetail({
-    //         'action': 'edit',
-    //     });
-    //     setTransportMode(transportMode)
-    // }
+    const setEdit = (category) => {
+        setDetail({
+            'action': 'edit',
+        });
+        setCategory(category)
+    }
 
-    // const clear = () => {
-    //     setTransportMode({
-    //         name: '',
-    //     })
-    //     setDetail(null)
-    // }
+    const clear = () => {
+        if (messagesObj.type === 'success') {
+            closeDetail()
+        }
+    }
+
+    const closeDetail = () => {
+        setCategory({
+            name: '',
+        })
+
+        setDetail(null)
+        clearMessages()
+    }
+
+    const clearMessages = () => {
+        dispatch({ type: 'MESSAGES', payload: {} })
+    }
 
     return (
         <div className="container-fluid">
@@ -96,10 +122,10 @@ const Categories = () => {
                                 </div>
                                 <div className="col-lg-5 col-md-5 col-sm-5">
                                     <FontAwesomeIcon icon={faCogs} className={classes.ficon} />
-                                    <h3>Categories (0) </h3>
+                                    <h3>Categories ({categories ? categories.length : 0}) </h3>
                                 </div>
                                 <div className="col-lg-4 col-md-4 col-sm-4" style={{ "textAlign": "right" }}>
-                                    {/* <Actions reload={reload} setShowModal={setShowModal} setDetail={setDetail} showActions={showActions} /> */}
+                                    <Actions reload={reload} setShowModal={setShowModal} setDetail={setDetail} />
                                 </div>
                             </div>
                         </header>
@@ -109,7 +135,113 @@ const Categories = () => {
                             <MasterDataNav />
                         </section>
 
+                        <section>
+                            {showCriteria ?
+                                <ShowCriteriaWidget criteria={criteria} setShowModal={setShowModal} /> : <></>
+                            }
+
+                            <div className="row">
+
+                                {messagesObj.type === 'success' ?
+                                    <Messages messagesObj={messagesObj} clearMessages={clearMessages} /> : <></>
+                                }
+
+                                {categories?.length > 0 ?
+                                    <div className="table">
+                                        <table className="table table-striped">
+                                            <thead>
+                                                <tr className={classes.tableHeaer}>
+                                                    <th scope="col">Name</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {
+                                                    currentPageData.map(item => {
+                                                        return <tr className={classes.tableTd} key={item._id}>
+                                                            <td>{item.name}</td>
+                                                            <td>{item.is_default === true ? <FontAwesomeIcon icon={faCheck} /> : <></>}</td>
+                                                            <td style={{ "textAlign": "right" }}>
+                                                                {
+                                                                    item.is_default === false ? <button className={`btn btn-primary ${classes.rowIcons}`}>
+                                                                        <FontAwesomeIcon icon={faCheck} onClick={e => setDefaultCategory(item._id)} />
+                                                                    </button> : <></>
+                                                                }
+
+                                                                <RowActions
+                                                                    setEdit={setEdit}
+                                                                    deleteHandle={deleteHandle}
+                                                                    item={item}
+                                                                    classes={classes}
+                                                                />
+                                                            </td>
+                                                        </tr>
+                                                    })
+                                                }
+                                            </tbody>
+                                        </table>
+
+                                        <div className="row">
+                                            <SweetPagination
+                                                currentPageData={setCurrentPageData}
+                                                dataPerPage={8}
+                                                getData={categories}
+                                                navigation={true}
+                                                style={'style-2'}
+                                            />
+                                        </div>
+
+
+                                    </div>
+                                    :
+                                    <div className="fw-light">No Categories Found</div>
+                                }
+
+                            </div>
+                        </section>
+
                     </div>
+                </div>
+
+                <div style={detail ? { "display": "block", "paddingLeft": 0 } : { "display": "none" }} className={detail ? "col-lg-4 col-md-4 col-sm-4" : ""}>
+                    <section className="section">
+                        <header className={classes.header2}>
+                            <div className="row">
+                                <div className="col-lg-7 col-md-7 col-sm-7">
+                                    <h3>{detail?.action === 'add' ? 'Create Category' : 'Update Category'}</h3>
+                                </div>
+                                <div className="col-lg-5 col-md-5 col-sm-5" style={{ "textAlign": "right" }}>
+                                    <button className="btn btn-small btn-warning text-light" >
+                                        <FontAwesomeIcon icon={faList} onClick={e => closeDetail()} />
+                                    </button>
+                                </div>
+                            </div>
+                        </header>
+
+                        {messagesObj.type === 'danger' ?
+                            <Messages messagesObj={messagesObj} clearMessages={clearMessages} /> : <></>
+                        }
+
+                        <div className="row mt-2 p-1">
+                            <div className="form-group">
+                                <div className="row mb-2">
+                                    <div className="col-lg-2 col-md-2 col-sm-2 mt-2">
+                                        <label className={classes.label}>Name:</label>
+                                    </div>
+                                    <div className="col-lg-10 col-md-10 col-sm-10">
+                                        <input type='text' className="form-control" value={category.name} onChange={e => setCategory({ ...category, name: e.target.value })} />
+                                    </div>
+                                </div>
+                            </div>
+                            <SubmitActions clear={closeDetail} submitHandle={submitHandle} detail={detail} />
+                        </div>
+
+                    </section>
+                </div>
+
+                <div className="modal">
+                    <FilterModal showModal={showModal} setShowModal={setShowModal} setFilter={setFilter} criteria={criteria} setShowCriteria={setShowCriteria} />
                 </div>
             </div>
         </div>
